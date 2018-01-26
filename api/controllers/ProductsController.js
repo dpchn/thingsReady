@@ -1,7 +1,7 @@
 /**
- * ProfileController
+ * ProductsController
  *
- * @description :: Server-side logic for managing profiles
+ * @description :: Server-side logic for managing products
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 

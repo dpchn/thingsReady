@@ -13,11 +13,12 @@ var crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     secretePassword = 'SECRETE';
 var jwt = require('jsonwebtoken');
+//var jwt = require('express-jwt');
 var secretKey = 'USPER_SECRET';
 
 module.exports = {
 	connection: 'mongodbServer',
-	tableName : 'signUp',
+	tableName : 'user',
 
 	attributes: {
 
@@ -28,14 +29,7 @@ module.exports = {
 
 		lastname : {
 			type: 'string',
-			required: true	
 		},
-
-		gender : {
-			type: 'array',
-			required:true,
-			enum:['male','female']
-	},
 
 		email : {
 			type: 'string',
@@ -49,12 +43,28 @@ module.exports = {
 		unique:true
 	},
 
-		password :{
-			type: 'string',
-			required:true,
-			minLength:6
-	}
+	password : {
+		type: 'string',
+		required:true,
+		minLength:6
 	},
+
+	products : {
+		collection : 'products',
+		via : 'member'
+	}
+
+	adposted : {
+		collection : 'adpost',
+		via : 'member'
+	}
+	active:{
+		type:'boolean',
+		required:true,
+		enum:[true,false],
+		defaultsTo:true
+	}
+},
 
 
 
@@ -77,7 +87,7 @@ module.exports = {
 			  	
 			  User.create(data, function (err, newresult){
 
-						var token = jwt.sign({id:'newresult'}, secretKey);
+						var token = jwt.sign({payload:newresult}, "secret");
 						newresult.token = token;
 						cb( err, newresult)
 				}); 				
@@ -98,9 +108,11 @@ module.exports = {
 			  data.password = crypted;
 
 
-			User.findOne({$and:[{email : data.email}, {password : crypted}]}, function(err, result){
+			User.findOne({$and:[{email : data.email}, {password : crypted}, {active : true}]}, function(err, result){
 				console.log(result)
 				if(result && !err){
+					var token = jwt.sign({payload:result}, "secret");
+						result.token = token;
 					cb(null, result);
 				}
 				else if(err){
@@ -110,6 +122,15 @@ module.exports = {
 					cb(null, "Wrong email/password");
 				}
 			});
+	},
+
+	profile : function(id, cb){
+		User.findOne({id : id}).exec(function(err, result){
+			if(err)
+				cb(err);
+			else
+				cb(null, result);
+		});
 	}
 };
 

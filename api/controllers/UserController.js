@@ -72,8 +72,14 @@ var UserController = {
   },
 
 
-  profile : function(res, req){
-      var data = res.body;
+  profile : function(req, res){
+  //  sails.log.debug(re)
+      var data = req.body;
+      User.profile(data.id, function(err, result){
+        if(err)
+          return res.negotiate(err);
+        return res.send(result);
+      });
   },
 
   loginValidation : function(req, res){

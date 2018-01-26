@@ -28,11 +28,13 @@
     "debug": "node debug app.js",
     "start": "node app.js"
   },
+
   "main": "app.js",
   "repository": {
     "type": "git",
     "url": "git://github.com/anonymous node/sails user/thingsReady.git"
   },
+
   "author": "anonymous node/sails user",
   "license": ""
 }

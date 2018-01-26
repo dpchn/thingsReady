@@ -36,9 +36,16 @@ module.exports.routes = {
     view: 'homepage'
   },
 
-  'POST /signup'  : 'UserController.signup',
-  'POST /login'   : 'UserController.login',
-  'GET /profile'  : 'UserController.profile',
+  'POST /user/signup'  : 'UserController.signup',
+  'POST /user/login'   : 'UserController.login',
+  'POST /user/profile'  : 'UserController.profile',
+
+
+
+
+
+
+  'POST /addcategory' : 'CategoriesController.addCategory',
 
   /***************************************************************************
   *                                                                          *

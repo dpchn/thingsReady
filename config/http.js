@@ -8,7 +8,7 @@
  * For more information on configuration, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.http.html
  */
-
+var expressJwt = require('express-jwt');
 module.exports.http = {
 
   /****************************************************************************
@@ -21,7 +21,7 @@ module.exports.http = {
   *                                                                           *
   ****************************************************************************/
 
-  middleware: {
+  //middleware: {
 
   /***************************************************************************
   *                                                                          *
@@ -77,7 +77,7 @@ module.exports.http = {
 
     // bodyParser: require('skipper')({strict: true})
 
-  },
+ // },
 
   /***************************************************************************
   *                                                                          *
@@ -90,4 +90,26 @@ module.exports.http = {
   ***************************************************************************/
 
   // cache: 31557600000
+};
+
+
+module.exports = {
+  http: {
+    customMiddleware: function(app){
+      app.use(expressJwt({secret: 'secret'}).unless({path: [
+          '/user/signup',
+          '/user/login',
+          '/addcategory',
+       /*   '/user/forgotpassword',
+          '/user/checkemail'*/
+          
+      ]}));
+      app.use(function (err, req, res, next) {
+        if (err.name === 'UnauthorizedError') { 
+          res.send(401, {status: 401, message: err.message});
+        }
+      });  
+    },
+  }  
+
 };
